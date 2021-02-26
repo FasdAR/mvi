@@ -78,9 +78,9 @@ class Store<S : UiState, E : UiEffect>(
     @ExperimentalCoroutinesApi
     private suspend fun initAction() {
         merge(*middleware.bindMiddleware(actionBus, currentState).toTypedArray())
-        .collect {
-            actionBus.emit(it)
-        }
+            .collect {
+                actionBus.emit(it)
+            }
     }
 
     suspend fun triggerAction(action: Action) {

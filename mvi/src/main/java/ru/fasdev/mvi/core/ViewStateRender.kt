@@ -1,6 +1,5 @@
 package ru.fasdev.mvi.core
 
-import ru.fasdev.mvi.core.state.UiEffect
 import ru.fasdev.mvi.core.state.UiState
 
 interface ViewStateRender<S : UiState> {
