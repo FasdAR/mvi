@@ -1,10 +1,12 @@
 package ru.fasdev.mvi.core
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
@@ -25,13 +27,22 @@ class Store<S : UiState, E : UiEffect>(
     val currentState: S = state.value
 
     @ExperimentalCoroutinesApi
-    fun initBus(coroutineScope: CoroutineScope) {
+    fun initBus(coroutineScope: CoroutineScope, initFlow: () -> Unit) {
         coroutineScope.launch {
             initAction()
         }
 
         coroutineScope.launch {
             initReduce()
+        }
+
+        coroutineScope.launch {
+            actionBus
+                .subscriptionCount
+                .filter { it == 2 }
+                .collect {
+                    initFlow()
+                }
         }
     }
 
@@ -64,13 +75,6 @@ class Store<S : UiState, E : UiEffect>(
     }
 
     suspend fun triggerAction(action: Action) {
-        actionBus.subscriptionCount.collect {
-            if (it >= 2) {
-                actionBus.emit(action)
-            }
-            else {
-                triggerAction(action)
-            }
-        }
+        actionBus.emit(action)
     }
 }
