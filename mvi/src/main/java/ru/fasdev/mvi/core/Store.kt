@@ -1,5 +1,6 @@
 package ru.fasdev.mvi.core
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -60,7 +61,10 @@ class Store<S : UiState, E : UiEffect>(
         merge(
             *middleware.bindMiddleware(actionBus, currentState).toTypedArray()
         )
-            .collect(actionBus::emit)
+            .collect {
+                Log.d("ECENT", it.toString())
+                actionBus.emit(it)
+            }
     }
 
     suspend fun triggerAction(action: Action) {
