@@ -21,7 +21,7 @@ class Store<S : UiState, E : UiEffect>(
     val currentState: S
         get() = state.value
 
-    fun procession (coroutineScope: CoroutineScope, action: Action) {
+    fun procession(coroutineScope: CoroutineScope, action: Action) {
         coroutineScope.launch(Dispatchers.Default) {
             procession(action)
         }
