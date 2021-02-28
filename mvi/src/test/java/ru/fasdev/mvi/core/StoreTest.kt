@@ -26,7 +26,7 @@ class StoreTest
     //#region Test Data
     private val testState = TestState(text = "Hello State")
     private val testEffect = TestEffect(text = "Hello Effect")
-    //#ednregion
+    //#endregion
 
     @BeforeEach
     fun init() {
